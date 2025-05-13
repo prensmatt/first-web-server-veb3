@@ -6,51 +6,49 @@ const app = express()
 const port = 3000
 app.use(userAgent.express());
 
-// create read update delete -> db (file)
-// post, get, put/patch, delete -> verb
 
 
-app.use('/users', readDbFile);
-app.get('/users',
-    async (req, res) => res.send(req.users)
+app.use('/students', readDbFile);
+app.get('/students',
+    async (req, res) => res.send(req.students)
 )
 
-app.post("/users",
+app.post("/students",
     async (req, res, next) => {
-        req.users.push({
-            "name": "ali2",
-            "age": 14,
-            "email": "2elinemet.isiyev@mail.ru"
+        console.log(req.students)
+        req.students.push({
+            "id":1,"name":"aliya","surname":"agayeva","schoolNo":"223","grade":"85"
         })
-        req.data = JSON.stringify(req.users)
+        req.data = JSON.stringify(req.students)
         next()
     },
     writeDbFile
 )
 
-app.put('/users/:id',
+app.put('/students/:id',
     async (req, res, next) => {
         const id = req.params.id;
         const bodyFromFe = {
-            "name": "alinemet"
+            "id":1,"name":"kamila","surname":"agayeva","schoolNo":"223","grade":"85"
+
         }
-        const newUsers = req.users.map((user) => {
-            if (user.id == id) {
-                return { ...user, ...bodyFromFe }
+        const newStudents = req.students.map((student) => {
+            if (student.id == id) {
+                return { ...student, ...bodyFromFe }
             }
-            return user;
+            return student;
         })
-        req.data = JSON.stringify(newUsers)
+        req.data = JSON.stringify(newStudents)
         next()
     },
     writeDbFile
 )
 
-app.delete("/users/:id",
+app.delete("/students/:id",
     async (req, res, next) => {
         const id = req.params.id
-        const newUsers = req.users.filter((user) => user.id != id)
-        req.data = JSON.stringify(newUsers)
+        const newStudents = req.students.filter((student) => student.id != id)
+        req.data = JSON.stringify(newStudents)
         next()
     },
     writeDbFile
